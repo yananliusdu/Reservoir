@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8
+# yanan liu
+# 08/11/2023
 
 import numpy as np
 import networkx as nx
@@ -105,16 +107,20 @@ class Reservoir:
         self.A = nx.adjacency_matrix(g).todense()
         # spectral radius: rho
         self.rho = max(abs(np.linalg.eig(self.A)[0]))
-        self.A *= 1.25 / self.rho
+        # self.A *= 1.25 / self.rho
+        self.A = (self.A.astype(np.float64) * (1.25 / self.rho)).astype(np.int32)
         # run the reservoir with the data and collect r
         for t in range(self.train_len):
             u = np.vstack((x[t] for x in self.dataset))
             # r(t + \Delta t) = (1 - alpha)r(t) + alpha * tanh(A * r(t) + Win * u(t) + bias)
             self.r = (1 - self.alpha) * self.r + self.alpha * np.tanh(np.dot(self.A,
                                                                              self.r) + np.dot(self.Win, np.vstack((self.bias, u))))
+            # if t >= self.init_len:
+            #     self.R[:, [t - self.init_len]
+            #            ] = np.vstack((self.bias, u, self.r))[:, 0]
             if t >= self.init_len:
-                self.R[:, [t - self.init_len]
-                       ] = np.vstack((self.bias, u, self.r))[:, 0]
+                self.R[:, t - self.init_len] = np.vstack((self.bias, u, self.r)).flatten()
+
         # train the output
         R_T = self.R.T  # Transpose
         # Wout = (s * r^T) * ((r * r^T) + beta * I)

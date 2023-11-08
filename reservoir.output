@@ -69,3 +69,185 @@ N = 94, D = 9.695359714832659, RMS = 1.484130821800565e-04
 N = 96, D = 9.797958971132712, RMS = 5.008896449014670e-05
 N = 98, D = 9.899494936611665, RMS = 5.502875268616181e-04
 N = 100, D = 10.000000000000000, RMS = 8.280932622557327e-05
+# 2023-11-08 10:42:43.019660
+{
+    "input": {
+        "nodes": 2,
+        "functions": [
+            "lambda x: np.sin(128 * np.pi * x)",
+            "lambda x: x"
+        ],
+        "length": 5000
+    },
+    "reservoir": {
+        "start_node": 100,
+        "end_node": 100,
+        "step": 1,
+        "degree_function": "lambda x: np.sqrt(x)",
+        "sigma": 0.5,
+        "bias": 1,
+        "leakage_rate": 0.3,
+        "regression_parameter": 1e-08
+    },
+    "output": {
+        "nodes": 2
+    },
+    "training": {
+        "init": 1000,
+        "train": 3000,
+        "test": 2000,
+        "error": 1000
+    }
+}
+# 2023-11-08 10:59:15.159583
+{
+    "input": {
+        "nodes": 2,
+        "functions": [
+            "lambda x: np.sin(128 * np.pi * x)",
+            "lambda x: x"
+        ],
+        "length": 5000
+    },
+    "reservoir": {
+        "start_node": 100,
+        "end_node": 100,
+        "step": 1,
+        "degree_function": "lambda x: np.sqrt(x)",
+        "sigma": 0.5,
+        "bias": 1,
+        "leakage_rate": 0.3,
+        "regression_parameter": 1e-08
+    },
+    "output": {
+        "nodes": 2
+    },
+    "training": {
+        "init": 1000,
+        "train": 3000,
+        "test": 2000,
+        "error": 1000
+    }
+}
+# 2023-11-08 11:32:28.496695
+{
+    "input": {
+        "nodes": 2,
+        "functions": [
+            "lambda x: np.sin(128 * np.pi * x)",
+            "lambda x: x"
+        ],
+        "length": 5000
+    },
+    "reservoir": {
+        "start_node": 100,
+        "end_node": 100,
+        "step": 1,
+        "degree_function": "lambda x: np.sqrt(x)",
+        "sigma": 0.5,
+        "bias": 1,
+        "leakage_rate": 0.3,
+        "regression_parameter": 1e-08
+    },
+    "output": {
+        "nodes": 2
+    },
+    "training": {
+        "init": 1000,
+        "train": 3000,
+        "test": 2000,
+        "error": 1000
+    }
+}
+# 2023-11-08 11:32:43.981515
+{
+    "input": {
+        "nodes": 2,
+        "functions": [
+            "lambda x: np.sin(128 * np.pi * x)",
+            "lambda x: x"
+        ],
+        "length": 5000
+    },
+    "reservoir": {
+        "start_node": 100,
+        "end_node": 100,
+        "step": 1,
+        "degree_function": "lambda x: np.sqrt(x)",
+        "sigma": 0.5,
+        "bias": 1,
+        "leakage_rate": 0.3,
+        "regression_parameter": 1e-08
+    },
+    "output": {
+        "nodes": 2
+    },
+    "training": {
+        "init": 1000,
+        "train": 3000,
+        "test": 2000,
+        "error": 1000
+    }
+}
+# 2023-11-08 11:39:30.008406
+{
+    "input": {
+        "nodes": 2,
+        "functions": [
+            "lambda x: np.sin(128 * np.pi * x)",
+            "lambda x: x"
+        ],
+        "length": 5000
+    },
+    "reservoir": {
+        "start_node": 100,
+        "end_node": 100,
+        "step": 1,
+        "degree_function": "lambda x: np.sqrt(x)",
+        "sigma": 0.5,
+        "bias": 1,
+        "leakage_rate": 0.3,
+        "regression_parameter": 1e-08
+    },
+    "output": {
+        "nodes": 2
+    },
+    "training": {
+        "init": 1000,
+        "train": 3000,
+        "test": 2000,
+        "error": 1000
+    }
+}
+N = 100, D = 10.000000000000000, RMS = 8.308101638382024e-05
+# 2023-11-08 11:48:34.434237
+{
+    "input": {
+        "nodes": 2,
+        "functions": [
+            "lambda x: np.sin(128 * np.pi * x)",
+            "lambda x: x"
+        ],
+        "length": 5000
+    },
+    "reservoir": {
+        "start_node": 100,
+        "end_node": 100,
+        "step": 1,
+        "degree_function": "lambda x: np.sqrt(x)",
+        "sigma": 0.5,
+        "bias": 1,
+        "leakage_rate": 0.3,
+        "regression_parameter": 1e-08
+    },
+    "output": {
+        "nodes": 2
+    },
+    "training": {
+        "init": 1000,
+        "train": 3000,
+        "test": 2000,
+        "error": 1000
+    }
+}
+N = 100, D = 10.000000000000000, RMS = 8.308101638382024e-05
