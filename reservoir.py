@@ -14,6 +14,8 @@ import datetime
 from multiprocessing.dummy import Pool as ThreadPool
 import matplotlib.pyplot as plt
 
+
+
 # if config file not exists, use this default config
 default_config = """{
   "input": {
@@ -45,7 +47,14 @@ default_config = """{
     "error": 1000
   }
 }"""
-
+def plot_dataset(dataset, input_len):
+    plt.figure(figsize=(12, 7))
+    for i in range(dataset.shape[0]):
+        plt.subplot(dataset.shape[0], 1, i + 1)
+        plt.plot(np.arange(input_len), dataset[i], label=f'Input signal {i}')
+        plt.legend()
+        plt.tight_layout()
+    plt.show()
 
 class Reservoir:
     def __init__(self):
@@ -68,6 +77,8 @@ class Reservoir:
             dataset.append(self.input_func[i](
                 np.arange(self.input_len) / self.input_len))
         self.dataset = np.array(list(zip(*dataset))).T # shape = (M, length)
+
+        plot_dataset(self.dataset, self.input_len)
 
         # Reservoir layer
         self.start_node = config["reservoir"]["start_node"]
@@ -103,12 +114,13 @@ class Reservoir:
                                      self.sigma, (self.N, self.M + 1))
         # TODO: the values of non-zero elements are randomly drawn from uniform dist [-1, 1]
         g = nx.erdos_renyi_graph(self.N, self.D / self.N, 42, True)
-        # nx.draw(g, node_size=self.N)
+        nx.draw(g, node_size=self.N)
         self.A = nx.adjacency_matrix(g).todense()
         # spectral radius: rho
         self.rho = max(abs(np.linalg.eig(self.A)[0]))
         # self.A *= 1.25 / self.rho
-        self.A = (self.A.astype(np.float64) * (1.25 / self.rho)).astype(np.int32)
+        # self.A = self.A.astype(np.float64) * (1.25 / self.rho) *0
+        self.A = self.A.astype(np.float64) * (0.2 / self.rho)
         # run the reservoir with the data and collect r
         for t in range(self.train_len):
             u = np.vstack((x[t] for x in self.dataset))
@@ -158,6 +170,20 @@ class Reservoir:
         plt.legend(loc = 'upper right')
         # plt.savefig('N = ' + str(self.N), dpi = 300)
       plt.show()
+
+    def visualize_matrices(self):
+        plt.figure(figsize=(12, 6))
+        plt.subplot(1, 2, 1)
+        plt.title("Input Weight Matrix Win")
+        plt.imshow(self.Win, aspect='auto')
+        plt.colorbar()
+
+        plt.subplot(1, 2, 2)
+        plt.title("Reservoir Adjacency Matrix A")
+        plt.imshow(self.A, aspect='auto')
+        plt.colorbar()
+
+        plt.show()
     
     def run(self):
         with open('reservoir.output', 'a') as output:
@@ -192,3 +218,4 @@ if __name__ == '__main__':
     atexit.register(exit_handler)
     r = Reservoir()
     r.run()
+    # r.visualize_matrices()
