@@ -43,7 +43,7 @@ It will generate the prediction.
 
 For one single signal input:   
 **sin(t):**   
-<img src="imgs/1signal.png" style="height: 300px;"/>
+<img src="imgs/Yanan test.png" style="height: 300px;"/>
 
 For two signals input:     
 **sin(t) and t:**    
