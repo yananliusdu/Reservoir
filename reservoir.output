@@ -1551,3 +1551,34 @@ N = 100, D = 10.000000000000000, RMS = 1.410943694099363e-04
     }
 }
 N = 100, D = 10.000000000000000, RMS = 6.572242558341757e-06
+# 2023-11-13 17:31:08.634259
+{
+    "input": {
+        "nodes": 2,
+        "functions": [
+            "lambda x: np.sin(128 * np.pi * x)",
+            "lambda x: x"
+        ],
+        "length": 5000
+    },
+    "reservoir": {
+        "start_node": 100,
+        "end_node": 100,
+        "step": 1,
+        "degree_function": "lambda x: np.sqrt(x)",
+        "sigma": 0.5,
+        "bias": 1,
+        "leakage_rate": 0.3,
+        "regression_parameter": 1e-08
+    },
+    "output": {
+        "nodes": 2
+    },
+    "training": {
+        "init": 1000,
+        "train": 3000,
+        "test": 2000,
+        "error": 1000
+    }
+}
+N = 100, D = 10.000000000000000, RMS = 6.572242558341757e-06
