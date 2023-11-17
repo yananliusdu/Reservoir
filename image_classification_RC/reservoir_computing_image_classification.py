@@ -13,6 +13,13 @@ from sklearn.preprocessing import OneHotEncoder
 from scipy.io import loadmat
 #数据设置
 
+if torch.cuda.is_available():
+    device = torch.device('cuda')
+else:
+    device = torch.device('cpu')
+print(f"Using device: {device}")
+
+
 def tanh(x):
     tanh =( torch.exp(x)-torch.exp(-x) )/ (torch.exp(x) + torch.exp(-x))
     return tanh
@@ -26,7 +33,7 @@ def to_one_hot(label,demension):
 
 
 
-parser = argparse.ArgumentParser(description='PyTorch Siamese Reservoir Network')
+parser = argparse.ArgumentParser(description='PyTorch Reservoir Network for Image Classification')
 
 parser.add_argument('--device', type=str, default='cpu')
 parser.add_argument('--seed', type=int, default=304, help='Random seed')
@@ -34,12 +41,12 @@ parser.add_argument('--seed', type=int, default=304, help='Random seed')
 # model
 parser.add_argument('--inSize', type=int, default=784, help='The number input nodes')
 parser.add_argument('--outSize', type=int, default=10, help='Reservoir output size')
-parser.add_argument('--resSize', type=int, default=2000, help='Reservoir capacity')
+parser.add_argument('--resSize', type=int, default=1000, help='Reservoir capacity')
 parser.add_argument('--alpha', type=float, default=0.5, help='Leaky rate')
 parser.add_argument('--sigma', type=float, default=0.5, help='Leaky rate')
-parser.add_argument('--trainLen', type=int, default=9000, help='Number of data for training')
-parser.add_argument('--init', type=int, default=500, help='Number of data for initing')
-parser.add_argument('--testlen', type=int, default=1000, help='Number of data for testing')
+parser.add_argument('--trainLen', type=int, default=60000, help='Number of data for training')
+parser.add_argument('--init', type=int, default=5000, help='Number of data for initing')
+parser.add_argument('--testlen', type=int, default=10000, help='Number of data for testing')
 
 # dir
 parser.add_argument('--save_dir', type=str, default='./result/train/weights/')
@@ -73,15 +80,15 @@ rhoW = max(abs(torch.linalg.eig(W)[0]))
 W *=(1.25 / rhoW)
 reg = 1e-3
 bias = 1
-BATCH_SIZE = 250
+BATCH_SIZE = 1000
 enc = OneHotEncoder(sparse = False)
 print("dataset...")
 
 transform = transforms.Compose([transforms.ToTensor(),transforms.Normalize(mean=[0.5], std=[0.5])])
 trainData = datasets.MNIST(root='./data', train=True, transform=transform, download=False)
 testData = datasets.MNIST(root='./data', train=False, transform=transform, download=False)
-train_dataset, _ = random_split(trainData, [2000, len(trainData) - 2000])
-test_dataset,_ = random_split(testData, [1000, len(testData) - 1000])
+# train_dataset, _ = random_split(trainData, [2000, len(trainData) - 2000])
+# test_dataset,_ = random_split(testData, [1000, len(testData) - 1000])
 
 trainDataLoader = torch.utils.data.DataLoader(dataset=trainData, batch_size=BATCH_SIZE, shuffle=True)
 testDataLoader = torch.utils.data.DataLoader(dataset=testData, batch_size=BATCH_SIZE)
@@ -99,14 +106,16 @@ for step,(trainImgs,labels) in enumerate(processBar):
     labels = labels.to(device)
     label = to_one_hot(labels,10)
     #labels = labels.view(1,-1).to(device)
-    if step < 2:
+    ini_step = int(init/BATCH_SIZE)
+    total_step = int(trainLen/BATCH_SIZE)
+    if step < ini_step:
         for batch in range(BATCH_SIZE):
                     u =flattened_data[batch:batch+1,...].T
                     x = (1 - a) * x + a * tanh(np.matmul(Win, np.vstack((bias, u))) + np.matmul(W, x))
 
-    elif step >= 2 and step<36:
-        yt[:,(step-2)*250:(step-1)*250] = labels
-        Yt[:,(step-2)*250:(step-1)*250] = label.T
+    elif step >= ini_step and step< total_step:
+        yt[:,(step-ini_step)*BATCH_SIZE:(step-ini_step+1)*BATCH_SIZE] = labels
+        Yt[:,(step-ini_step)*BATCH_SIZE:(step-ini_step+1)*BATCH_SIZE] = label.T
         print("training ......")
         for batch in range(BATCH_SIZE):
                 u = flattened_data[batch:batch+1,...].T
@@ -140,8 +149,8 @@ print("test......")
 for step,(testImgs,labels) in enumerate(processBar):
     testImgs = testImgs.view(BATCH_SIZE,-1).to(device)
     labels = labels.to(device)
-    if step < 4:
-        target[:, step * 250:(step + 1) * 250] = labels
+    if step < testlen/BATCH_SIZE:
+        target[:, step * BATCH_SIZE:(step + 1) * BATCH_SIZE] = labels
         for batch in range(BATCH_SIZE):
             u = testImgs[batch:batch + 1, ...].T
             x = (1 - a) * x + a * tanh(np.matmul(Win, np.vstack((bias, u))) + np.matmul(W, x))
@@ -157,11 +166,3 @@ c = testlen - np.count_nonzero(C)
 accuracy = c/testlen
 print("accuracy is :",accuracy)
 print("test  complete")
-
-
-
-
-
-
-
-
